@@ -16,7 +16,7 @@
  
 #include "thrdpool.h"
 
-/* ¹¤×÷ÕßÏß³Ìº¯Êý, ´ÓÈÎÎñÁ´±íÖÐÈ¡³öÈÎÎñ²¢Ö´ÐÐ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ìºï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ */
 static void* 
 thread_routine(void *arg)
 {
@@ -60,7 +60,7 @@ thread_routine(void *arg)
 }
  
 /*
- * ´´½¨Ïß³Ì³Ø 
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì³ï¿½ 
  */
 int
 tpool_create(tpool_t **ppTpool, int max_thr_num)
@@ -73,7 +73,7 @@ tpool_create(tpool_t **ppTpool, int max_thr_num)
         exit(1);
     }
     
-    /* ³õÊ¼»¯ */
+    /* ï¿½ï¿½Ê¼ï¿½ï¿½ */
     tpool->max_thr_num = max_thr_num;
     tpool->shutdown = 0;
     tpool->list_close = 0;
@@ -94,7 +94,7 @@ tpool_create(tpool_t **ppTpool, int max_thr_num)
             __FUNCTION__, errno, strerror(errno));
         exit(1);
     }
-    /* ´´½¨¹¤×÷ÕßÏß³Ì */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ */
     tpool->thr_id = calloc(max_thr_num, sizeof(pthread_t));
     if (!tpool->thr_id) {
         printf("%s: calloc failed\n", __FUNCTION__);
@@ -112,7 +112,7 @@ tpool_create(tpool_t **ppTpool, int max_thr_num)
     return 0;
 }
  
-/* Ïú»ÙÏß³Ì³Ø */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì³ï¿½ */
 void
 tpool_destroy(tpool_t *tpool,int flag)
 {
@@ -133,7 +133,7 @@ tpool_destroy(tpool_t *tpool,int flag)
       }
     }
     tpool->shutdown = 1;
-    /* Í¨ÖªËùÓÐÕýÔÚµÈ´ýµÄÏß³Ì */
+    /* Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÈ´ï¿½ï¿½ï¿½ï¿½ß³ï¿½ */
     
     pthread_cond_broadcast(&tpool->queue_ready);
     pthread_mutex_unlock(&tpool->queue_lock);
@@ -155,7 +155,7 @@ tpool_destroy(tpool_t *tpool,int flag)
     free(tpool);    
 }
  
-/* ÏòÏß³Ì³ØÌí¼ÓÈÎÎñ */
+/* ï¿½ï¿½ï¿½ß³Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 int
 tpool_add_work(tpool_t *tpool, void*(*routine)(void*), void *arg, int len)
 {
@@ -183,6 +183,8 @@ tpool_add_work(tpool_t *tpool, void*(*routine)(void*), void *arg, int len)
     if (tpool->list_close)
     {
       pthread_mutex_unlock(&tpool->queue_lock);
+      free(work->arg);
+      free(work);
       return 0;
     }
     member = tpool->queue_head;
@@ -194,7 +196,7 @@ tpool_add_work(tpool_t *tpool, void*(*routine)(void*), void *arg, int len)
         }
         member->next = work;
     }
-    /* Í¨Öª¹¤×÷ÕßÏß³Ì£¬ÓÐÐÂÈÎÎñÌí¼Ó */
+    /* Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     pthread_cond_signal(&tpool->queue_ready);
     pthread_mutex_unlock(&tpool->queue_lock);
  
